@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+
+  <body class="flex items-center justify-center flex-col min-h-[100vh]">
+    <div
+      class="container grid grid-cols-10 grid-rows-10 bg-red-400 h-[60vh] w-1/3"
+    ></div>
+    <div
+      id="diceBox"
+      class="bg-zinc-200 flex items-center justify-center flex-col mt-5 px-6 py-5 rounded-lg"
+    >
+      <p id="playerDisplay"></p>
+      <div class="dice">1</div>
+      <button class="bg-blue-500 px-2 py-2 border-none text-white rounded-md">
+        ClickMe
+      </button>
+    </div>
+
+    <script>
+
+const snakeBite = new Audio('../music/gameover.mp3');
+const move = new Audio('../music/move.mp3');
+const music = new Audio('../music/music.mp3');
+const food = new Audio('../music/food.mp3');
+const Winner = new Audio('../music/Winner.mp3');
+music.play();
+
+      let player1, player2;
+      let container = document.querySelector(".container");
+
+      for (let i = 100; i > 0; i--) {
+        if (i % 10 == 0 && (i / 10) % 2 != 0) {
+          let m = i;
+          for (let j = m - 9; j <= m; j++) {
+            let div = document.createElement("div");
+            div.textContent = j;
+            div.style.border = "1px solid black";
+            div.style.display = "flex";
+            div.style.justifyContent = "center";
+            div.style.alignItems = "center";
+            container.appendChild(div);
+          }
+          i = i - 9;
+        } else {
+          let div = document.createElement("div");
+          div.textContent = i;
+          div.style.border = "1px solid black";
+          div.style.display = "flex";
+          div.style.justifyContent = "center";
+          div.style.alignItems = "center";
+          container.appendChild(div);
+        }
+      }
+      let DiceElem = document.querySelector(".dice");
+      let clickMe = document.querySelector("button");
+      let para = document.getElementById("playerDisplay");
+      let currentPlayer = "red";
+      let play = "p2";
+      let cur_val = 0;
+      let val_b = 0;
+      let val_r = 0;
+      let target_b = 0;
+      let target_r = 0;
+     const button  = document.querySelector("button")
+      button.addEventListener("click", () => {
+        move.play();
+        let min = 1;
+        let max = 6;
+
+        let dice_val = Math.floor(Math.random() * (max - min + 1)) + min;
+        DiceElem.textContent = dice_val;
+        if (currentPlayer === "red") {
+          clickMe.style.backgroundColor = "blue";
+          para.textContent = "Blue Players Turn";
+          currentPlayer = "blue";
+          play = "p1";
+        } else {
+          clickMe.style.backgroundColor = "red";
+          para.textContent = "Red Players Turn";
+          currentPlayer = "red";
+          play = "p2";
+        }
+
+        Array.from(container.children).forEach((div) => {
+          if (div.style.backgroundColor === "blue" && play == "p2") {
+            div.textContent = val_b;
+            div.style.backgroundColor = "#F87171";
+          }
+          if (div.style.backgroundColor === "red" && play == "p1") {
+            div.textContent = val_r;
+            div.style.backgroundColor = "#F87171";
+          }
+        });
+
+        let dice_VALUE = parseInt(dice_val.toString());
+
+        if (play == "p1") {
+          target_r += dice_VALUE;
+          target = target_r;
+        } else {
+          target_b += dice_VALUE;
+          target = target_b;
+        }
+
+        Array.from(container.children).forEach((div) => {
+          let div_val = parseInt(div.textContent.trim());
+
+          if (div_val == target) {
+            if (play == "p1") {
+              div.style.backgroundColor = "red";
+              val_r = div_val;
+            } else {
+              div.style.backgroundColor = "blue";
+              val_b = div_val;
+            }
+            div.textContent = play;
+          }
+        });
+
+        function LadderCode() {
+
+          if (
+            val_r == 15 ||
+            val_r == 49 ||
+            val_r == 63 ||
+            val_r == 79 ||
+            val_r == 21 ||
+            val_r == 55 ||
+            val_r == 37 ||
+            val_r == 87
+          ) {
+            food.play()
+            Array.from(container.children).forEach((div) => {
+              if (div.style.backgroundColor == "red") {
+                div.style.backgroundColor = "#F87171";
+                div.textContent = val_r;
+
+              }
+            });
+            Array.from(container.children).forEach((div) => {
+              if (parseInt(div.textContent.trim()) === val_r + 10) {
+                div.style.backgroundColor = "red";
+                div.textContent = "p2";
+              }
+            });
+            target_r += 10;
+            val_r += 10;
+          }
+
+          if (
+            val_b === 12 ||
+            val_b === 34 ||
+            val_b === 48 ||
+            val_b === 25 ||
+            val_b === 45 ||
+            val_b === 54 ||
+            val_b === 76 ||
+            val_b === 69 ||
+            val_b === 92 ||
+            val_b === 85
+          ) {
+            food.play()
+            Array.from(container.children).forEach((div) => {
+              if (div.style.backgroundColor == "blue") {
+                div.style.backgroundColor = "#F87171";
+                div.textContent = val_b;
+              }
+            });
+
+            Array.from(container.children).forEach((div) => {
+              if (parseInt(div.textContent.trim()) === val_b + 10) {
+                div.style.backgroundColor = "blue";
+                div.textContent = "p1";
+              }
+            });
+            target_b += 10;
+            val_b += 10;
+          }
+        }
+        LadderCode();
+
+        function snakecode() {
+          if (
+            val_r === 12 ||
+            val_r === 34 ||
+            val_r === 48 ||
+            val_r === 25 ||
+            val_r === 45 ||
+            val_r === 54 ||
+            val_r === 76 ||
+            val_r === 69 ||
+            val_r === 92 ||
+            val_r === 85
+          ) {
+            snakeBite.play()
+            Array.from(container.children).forEach((div) => {
+              if (div.style.backgroundColor == "red") {
+                div.style.backgroundColor = "#F87171";
+                div.textContent = val_r;
+              }
+            });
+
+            Array.from(container.children).forEach((div) => {
+              if (parseInt(div.textContent.trim()) === val_r - 10) {
+                div.style.backgroundColor = "red";
+                div.textContent = "p2";
+              }
+            });
+            target_r -= 10;
+            val_r -= 10;
+          }
+          if (
+            val_b === 12 ||
+            val_b === 34 ||
+            val_b === 48 ||
+            val_b === 25 ||
+            val_b === 45 ||
+            val_b === 54 ||
+            val_b === 76 ||
+            val_b === 69 ||
+            val_b === 92 ||
+            val_b === 85
+          ) {
+            snakeBite.play()
+            Array.from(container.children).forEach((div) => {
+              if (div.style.backgroundColor == "blue") {
+                div.style.backgroundColor = "#F87171";
+                div.textContent = val_b;
+              }
+            });
+
+            Array.from(container.children).forEach((div) => {
+              if (parseInt(div.textContent.trim()) === val_b - 10) {
+                div.style.backgroundColor = "blue";
+                div.textContent = "p1";
+              }
+            });
+            target_b -= 10;
+            val_b -= 10;
+          }
+        }
+        snakecode();
+
+        if (target_b >= 100) {
+            Winner.play()
+          console.log("P2 is Winner");
+          button.disabled = true;
+        } else if (target_r >= 100) {
+            Winner.play()
+            button.disabled = true;
+          console.log("P1 is Winner");
+        }
+      });
+    </script>
+  </body>
+</html>

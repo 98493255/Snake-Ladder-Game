@@ -4,41 +4,74 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
-
     <script src="https://cdn.tailwindcss.com"></script>
   </head>
-  <body class="flex items-center justify-center flex-col min-h-[100vh]">
+  <body
+    class="flex items-center justify-center font-[gilroy] flex-col min-h-[100vh]"
+  >
     <div
       class="container grid grid-cols-10 grid-rows-10 bg-red-400 h-[60vh] w-1/3"
     ></div>
     <div
-      id="diceBox "
-      class="bg-zinc-200 flex items-center justify-center flex-col mt-5 px-6 py-5 rounded-lg"
+      id="fullGameMakerApplication"
+      class="flex w-1/3 justify-between items-center mt-5"
     >
-      <p id="playerDisplay"></p>
-      <div class="dice">1</div>
-      <button class="bg-blue-500 px-2 py-2 border-none text-white rounded-md">
-        ClickMe
-      </button>
+      <div
+        id="diceBox"
+        class="bg-zinc-200 flex items-center justify-center flex-col mt-5 px-6 py-5 rounded-lg"
+      >
+        <p id="playerDisplay"></p>
+        <div class="dice">1</div>
+        <button class="bg-blue-500 px-2 py-2 border-none text-white rounded-md">
+          ClickMe
+        </button>
+      </div>
+      <div id="noOfPlayers" class="flex items-center justify-center gap-4">
+        <input
+          type="number"
+          min="2"
+          max="5"
+          class="mt-6 px-2 py-1 bg-rose-400 rounded-lg h-[5vh]"
+        />
+        <button
+          class="createPlayers px-3 py-1 bg-blue-500 rounded-lg text-white"
+        >
+          Create the Players
+        </button>
+        <div class="players"></div>
+        <div class="playerScore"></div>
+      </div>
     </div>
-
     <script>
       let player1, player2;
       let container = document.querySelector(".container");
       for (let i = 100; i > 0; i--) {
-        let div = document.createElement("div");
-        div.textContent = i;
-        div.style.border = "1px solid black";
-        div.style.display = "flex";
-        div.style.justifyContent = "center";
-        div.style.alignItems = "center";
-        container.appendChild(div);
+        if (i % 10 == 0 && (i / 10) % 2 != 0) {
+          let m = i;
+          for (let j = m - 9; j <= m; j++) {
+            let div = document.createElement("div");
+            div.textContent = j;
+            div.style.border = "1px solid black";
+            div.style.display = "flex";
+            div.style.justifyContent = "center";
+            div.style.alignItems = "center";
+            container.appendChild(div);
+          }
+          i = i - 9;
+        } else {
+          let div = document.createElement("div");
+          div.textContent = i;
+          div.style.border = "1px solid black";
+          div.style.display = "flex";
+          div.style.justifyContent = "center";
+          div.style.alignItems = "center";
+          container.appendChild(div);
+        }
       }
       let DiceElem = document.querySelector(".dice");
       let clickMe = document.querySelector("button");
       let para = document.getElementById("playerDisplay");
       let currentPlayer = "red";
-
       document.querySelector("button").addEventListener("click", () => {
         let min = 1;
         let max = 6;
@@ -46,14 +79,78 @@
         DiceElem.textContent = dice;
         if (currentPlayer === "red") {
           clickMe.style.backgroundColor = "blue";
-          para.textContent = "Blue Players Turn";
+          para.textContent = "Blue Player Turn";
           currentPlayer = "blue";
         } else {
           clickMe.style.backgroundColor = "red";
-          para.textContent = "Red Players Turn";
+          para.textContent = "Red Player Turn";
           currentPlayer = "red";
         }
       });
+      let players = document.querySelector(".players");
+      let playerScore = document.querySelector(".playerScore");
+
+      document.querySelector(".createPlayers").addEventListener("click", () => {
+        let input = document.querySelector("input").value;
+        console.log(input);
+
+        players.innerHTML = "";
+
+        for (let i = 0; i < input; i++) {
+          let div = document.createElement("div");
+          div.textContent = `P ${i + 1}`;
+          div.style.padding = "1vw";
+          div.style.display = "flex";
+          div.style.justifyContent = "center";
+          div.style.alignItems = "center";
+          div.style.borderRadius = "50%";
+          div.style.marginBottom = "5px ";
+          div.style.backgroundColor = "blue";
+          div.style.color = " white";
+          players.appendChild(div);
+        }
+
+        for (let j = 0; j < input; j++) {
+          let div = document.createElement("div");
+          div.style.padding = "1vw";
+          div.style.display = "flex";
+          div.style.justifyContent = "center";
+          div.style.alignItems = "center";
+          div.style.borderRadius = "50%";
+          div.style.marginBottom = "5px ";
+          div.style.color = " white";
+          div.style.backgroundColor = "red";
+          playerScore.appendChild(div);
+        }
+      });
+
+      let scoreP1Element = document.querySelector(
+        ".playerScore div:first-child"
+      );
+      let scoreP2Element = document.querySelector(
+        ".playerScore div:nth-child(2)"
+      );
+
+      let scoreP1 = parseInt(scoreP1Element.textContent);
+      let scoreP2 = parseInt(scoreP2Element.textContent);
+
+      if (scoreP1 >= 100) {
+        alert("P1 is Winner");
+      } else if (scoreP2 >= 100) {
+        alert("P2 is Winner");
+      }
+
+
+
+
+
+
+
+
+
+
+
+
     </script>
   </body>
 </html>
