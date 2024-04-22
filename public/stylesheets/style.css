@@ -14,3 +14,6 @@ a {
 #current1{
   font-weight: bolder;
 }
+#h1{
+  display: inline;
+}
